@@ -1,6 +1,6 @@
 # 🧊 Fridgestock - Fridge & Pantry Stock Manager
 
-A sleek, responsive full-stack web application to keep track of your home inventory (fridge, freezer, pantry) and automatically generate grocery shopping lists when items run low. Built with **React**, **Vite**, **Vanilla CSS**, and **Netlify Functions** with flexible database integration (PostgreSQL or local file-based JSON fallback).
+A sleek, responsive full-stack web application to keep track of your home inventory (fridge, freezer, pantry) and automatically generate grocery shopping lists when items run low. Built with **React**, **Vite**, **Vanilla CSS**, and **Netlify Functions** backed by real PostgreSQL via Netlify Database.
 
 ---
 
@@ -17,9 +17,10 @@ A sleek, responsive full-stack web application to keep track of your home invent
   - Calculates exactly how much to buy to reach the target capacity (`target_quantity - current_quantity`).
   - Restock items directly with a single click.
 - **⚡ Optimistic UI**: Super-fast interactions backed by clean REST API endpoints.
-- **🔌 Flexible Database Backend**:
-  - Automatically falls back to a persistent local `db.json` database for zero-config local development.
-  - Switches seamlessly to a hosted **PostgreSQL** database (e.g. Neon, Supabase, etc.) when `DATABASE_URL` is set in production.
+- **🔌 Real PostgreSQL Backend**:
+  - Uses Netlify Database Postgres through `NETLIFY_DB_URL` when deployed or running with Netlify Dev.
+  - Also supports `DATABASE_URL` for a separately managed PostgreSQL instance.
+  - Fails fast when no Postgres connection string is configured so the API never silently uses mock data.
 
 ---
 
@@ -28,7 +29,7 @@ A sleek, responsive full-stack web application to keep track of your home invent
 - **Frontend**: React 18, Vite, Lucide React (icons)
 - **Styling**: Vanilla CSS (sleek dark-mode elements, modern flexbox/grid layout)
 - **Backend Serverless**: Netlify Functions (Node.js)
-- **Database**: PostgreSQL (via `pg`) or persistent JSON File-based Mock Database
+- **Database**: Netlify Database Postgres via `pg`
 
 ---
 
@@ -65,7 +66,7 @@ Alternatively, if you only want to work on frontend styling and views:
 npm run dev
 ```
 
-*Note: When running without `DATABASE_URL` configured in your environment variables, the app will automatically initialize and use a local `db.json` file in the root folder as its database fallback.*
+*Note: The API requires a real Postgres connection. Use Netlify Database with Netlify Dev so `NETLIFY_DB_URL` is injected locally, or set `DATABASE_URL` to another PostgreSQL connection string.*
 
 ### 🏗️ Production Build
 
@@ -85,8 +86,10 @@ This compiles your React project and outputs the static assets to the `dist` fol
 ├── .netlify/              # Netlify local configuration and build cache (ignored)
 ├── dist/                  # Compiled production static output (ignored)
 ├── netlify/
+│   ├── database/          # Netlify Database schema migrations
+│   │   └── migrations/    # Auto-applied PostgreSQL migrations
 │   └── functions/         # Netlify serverless functions (Node.js API)
-│       ├── db.js          # Shared database pool connection and JSON fallback helper
+│       ├── db.js          # Shared PostgreSQL pool connection helper
 │       ├── grocery-list.js# API for retrieving items that are low in stock
 │       ├── item-decrement.js # API for atomic item decrement
 │       ├── item-increment.js # API for atomic item increment
@@ -102,7 +105,6 @@ This compiles your React project and outputs the static assets to the `dist` fol
 │   ├── App.jsx            # Main app shell, global states, API handlers, toasts
 │   ├── main.jsx           # Vite entrypoint
 │   └── index.css          # Core visual system, global variables, custom utilities
-├── db.json                # Local fallback mock JSON database (generated, ignored)
 ├── package.json           # Project manifest and scripts
 ├── netlify.toml           # Netlify settings, build setup, and API routes redirect rules
 └── vite.config.js         # Vite bundler configurations
@@ -110,15 +112,15 @@ This compiles your React project and outputs the static assets to the `dist` fol
 
 ---
 
-## 📜 Database Setup (Optional PostgreSQL)
+## 📜 Database Setup (Required PostgreSQL)
 
-To configure the application with a PostgreSQL database, set the `DATABASE_URL` environment variable:
+This application does not use a mock database. Configure Netlify Database for the site so Netlify injects `NETLIFY_DB_URL` into functions. For local development outside Netlify Database, set `DATABASE_URL` to a PostgreSQL connection string instead:
 
 ```env
 DATABASE_URL="postgres://username:password@hostname:5432/database"
 ```
 
-The app's Postgres schema uses an `items` table with the following layout:
+Netlify Database migrations are stored under `netlify/database/migrations/` and are applied automatically during deploys. The app's Postgres schema uses an `items` table with the following layout:
 
 ```sql
 CREATE TABLE items (
