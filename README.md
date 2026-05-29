@@ -121,23 +121,3 @@ DATABASE_URL="postgres://username:password@hostname:5432/database"
 ```
 
 Netlify Database migrations are stored under `netlify/database/migrations/` and are applied automatically during deploys. The app's Postgres schema uses an `items` table with the following layout:
-
-```sql
-CREATE TABLE items (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title VARCHAR(255) NOT NULL,
-  current_quantity INTEGER NOT NULL DEFAULT 0,
-  minimum_quantity INTEGER NOT NULL DEFAULT 0,
-  target_quantity INTEGER NOT NULL DEFAULT 0,
-  unit VARCHAR(50),
-  location VARCHAR(100) NOT NULL DEFAULT 'fridge',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
----
-
-## 📄 License
-
-Private/Proprietary.
