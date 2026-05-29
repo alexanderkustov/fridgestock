@@ -79,7 +79,7 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
         location: location
       };
 
-      const url = isEditMode ? `/api/items/${item.id}` : '/api/items';
+      const url = isEditMode ? `/api/items/${encodeURIComponent(item.id)}` : '/api/items';
       const method = isEditMode ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {

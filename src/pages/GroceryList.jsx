@@ -22,7 +22,7 @@ export default function GroceryList({
       // Perform consecutive restock patches
       await Promise.all(
         groceryList.map(item => 
-          fetch(`/api/items/${item.id}`, {
+          fetch(`/api/items/${encodeURIComponent(item.id)}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'restock' })

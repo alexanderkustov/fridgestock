@@ -1,4 +1,5 @@
 import { query } from './db.js';
+import { getItemId } from './route-utils.js';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +14,7 @@ export async function handler(event, context) {
   }
 
   const { httpMethod } = event;
-  const id = event.queryStringParameters ? event.queryStringParameters.id : null;
+  const id = getItemId(event);
 
   try {
     // 1. GET ALL ITEMS
