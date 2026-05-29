@@ -6,9 +6,9 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
 
   // Form Field States
   const [title, setTitle] = useState('');
-  const [currentQuantity, setCurrentQuantity] = useState(0);
-  const [minimumQuantity, setMinimumQuantity] = useState(0);
-  const [targetQuantity, setTargetQuantity] = useState(1);
+  const [currentQuantity, setCurrentQuantity] = useState('');
+  const [minimumQuantity, setMinimumQuantity] = useState('');
+  const [targetQuantity, setTargetQuantity] = useState('1');
   const [unit, setUnit] = useState('pcs');
   const [location, setLocation] = useState('fridge');
   
@@ -19,13 +19,18 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
   useEffect(() => {
     if (item) {
       setTitle(item.title || '');
-      setCurrentQuantity(Number(item.current_quantity) || 0);
-      setMinimumQuantity(Number(item.minimum_quantity) || 0);
-      setTargetQuantity(Number(item.target_quantity) || 1);
+      setCurrentQuantity(String(Number(item.current_quantity) || 0));
+      setMinimumQuantity(String(Number(item.minimum_quantity) || 0));
+      setTargetQuantity(String(Number(item.target_quantity) || 1));
       setUnit(item.unit || 'pcs');
       setLocation(item.location || 'fridge');
     }
   }, [item]);
+
+  const parseQuantity = (value, fallback = 0) => {
+    if (value === '') return fallback;
+    return Number(value);
+  };
 
   // Handle Form Submit
   const handleSubmit = async (e) => {
@@ -38,17 +43,26 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
       return;
     }
 
-    if (currentQuantity < 0 || minimumQuantity < 0 || targetQuantity < 0) {
+    const normalizedCurrentQuantity = parseQuantity(currentQuantity);
+    const normalizedMinimumQuantity = parseQuantity(minimumQuantity);
+    const normalizedTargetQuantity = parseQuantity(targetQuantity, 1);
+
+    if ([normalizedCurrentQuantity, normalizedMinimumQuantity, normalizedTargetQuantity].some(Number.isNaN)) {
+      setErrorMessage('Quantities must be valid numbers.');
+      return;
+    }
+
+    if (normalizedCurrentQuantity < 0 || normalizedMinimumQuantity < 0 || normalizedTargetQuantity < 0) {
       setErrorMessage('Quantities cannot be negative.');
       return;
     }
 
-    if (targetQuantity < 1) {
+    if (normalizedTargetQuantity < 1) {
       setErrorMessage('Target quantity must be at least 1.');
       return;
     }
 
-    if (targetQuantity < minimumQuantity) {
+    if (normalizedTargetQuantity < normalizedMinimumQuantity) {
       setErrorMessage('Target quantity should not be less than minimum quantity.');
       return;
     }
@@ -58,9 +72,9 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
       
       const payload = {
         title: title.trim(),
-        current_quantity: Number(currentQuantity),
-        minimum_quantity: Number(minimumQuantity),
-        target_quantity: Number(targetQuantity),
+        current_quantity: normalizedCurrentQuantity,
+        minimum_quantity: normalizedMinimumQuantity,
+        target_quantity: normalizedTargetQuantity,
         unit: unit.trim() || null,
         location: location
       };
@@ -136,49 +150,59 @@ export default function ItemForm({ item, onClose, onSave, showToast }) {
             </div>
 
             {/* Quantities Row */}
-            <div className="form-row-3col">
-              <div className="form-group">
-                <label htmlFor="form-current">Current Qty</label>
-                <input
-                  id="form-current"
-                  type="number"
-                  min="0"
-                  step="any"
-                  className="form-input"
-                  value={currentQuantity}
-                  onChange={(e) => setCurrentQuantity(Number(e.target.value))}
-                  disabled={saving}
-                />
-              </div>
+            <fieldset className="quantity-fieldset">
+              <legend>Stock levels</legend>
+              <p className="field-hint">Leave current or restock levels blank if you do not know them yet. Target must be at least 1.</p>
+              <div className="form-row-3col">
+                <div className="form-group">
+                  <label htmlFor="form-current">Current</label>
+                  <input
+                    id="form-current"
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    placeholder="How many now?"
+                    className="form-input"
+                    value={currentQuantity}
+                    onChange={(e) => setCurrentQuantity(e.target.value)}
+                    disabled={saving}
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="form-min">Min Threshold</label>
-                <input
-                  id="form-min"
-                  type="number"
-                  min="0"
-                  step="any"
-                  className="form-input"
-                  value={minimumQuantity}
-                  onChange={(e) => setMinimumQuantity(Number(e.target.value))}
-                  disabled={saving}
-                />
-              </div>
+                <div className="form-group">
+                  <label htmlFor="form-min">Restock at</label>
+                  <input
+                    id="form-min"
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputMode="decimal"
+                    placeholder="Low level"
+                    className="form-input"
+                    value={minimumQuantity}
+                    onChange={(e) => setMinimumQuantity(e.target.value)}
+                    disabled={saving}
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="form-target">Target Qty</label>
-                <input
-                  id="form-target"
-                  type="number"
-                  min="1"
-                  step="any"
-                  className="form-input"
-                  value={targetQuantity}
-                  onChange={(e) => setTargetQuantity(Number(e.target.value))}
-                  disabled={saving}
-                />
+                <div className="form-group">
+                  <label htmlFor="form-target">Stock to</label>
+                  <input
+                    id="form-target"
+                    type="number"
+                    min="1"
+                    step="any"
+                    inputMode="decimal"
+                    placeholder="Ideal amount"
+                    className="form-input"
+                    value={targetQuantity}
+                    onChange={(e) => setTargetQuantity(e.target.value)}
+                    disabled={saving}
+                  />
+                </div>
               </div>
-            </div>
+            </fieldset>
 
             {/* Units & Location Row */}
             <div className="form-row-2col">
