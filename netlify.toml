@@ -1,0 +1,38 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Routes and Redirects mapping clean API endpoints to Netlify functions
+[[redirects]]
+  from = "/api/items/:id/increment"
+  to = "/.netlify/functions/item-increment?id=:id"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/items/:id/decrement"
+  to = "/.netlify/functions/item-decrement?id=:id"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/items/:id"
+  to = "/.netlify/functions/items?id=:id"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/items"
+  to = "/.netlify/functions/items"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/grocery-list"
+  to = "/.netlify/functions/grocery-list"
+  status = 200
+  force = true

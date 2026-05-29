@@ -1,0 +1,46 @@
+[
+  {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "title": "Eggs",
+    "current_quantity": 12,
+    "minimum_quantity": 6,
+    "target_quantity": 12,
+    "unit": "pcs",
+    "location": "fridge",
+    "created_at": "2026-05-29T10:04:48.596Z",
+    "updated_at": "2026-05-29T12:11:26.598Z"
+  },
+  {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "title": "Chicken breast",
+    "current_quantity": 4,
+    "minimum_quantity": 2,
+    "target_quantity": 4,
+    "unit": "packs",
+    "location": "fridge",
+    "created_at": "2026-05-29T11:04:48.596Z",
+    "updated_at": "2026-05-29T12:11:26.602Z"
+  },
+  {
+    "id": "33333333-3333-3333-3333-333333333333",
+    "title": "Frozen veg",
+    "current_quantity": 4,
+    "minimum_quantity": 4,
+    "target_quantity": 4,
+    "unit": "bag",
+    "location": "freezer",
+    "created_at": "2026-05-29T12:04:48.596Z",
+    "updated_at": "2026-05-29T12:11:31.819Z"
+  },
+  {
+    "id": "25f28e09-9af6-4454-bb69-9ce45d8cc629",
+    "title": "cookies",
+    "current_quantity": 2,
+    "minimum_quantity": 1,
+    "target_quantity": 1,
+    "unit": "pcs",
+    "location": "pantry",
+    "created_at": "2026-05-29T12:11:47.686Z",
+    "updated_at": "2026-05-29T12:11:47.686Z"
+  }
+]
