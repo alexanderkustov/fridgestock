@@ -47,8 +47,6 @@ export default function Inventory({
       {/* Content Toolbar Actions */}
       <div className="content-header">
         <div className="page-title-group">
-          <h2>Kitchen Inventory</h2>
-          <p>Manage ingredients, stocks, and threshold warnings</p>
         </div>
         
         <div className="header-actions">
