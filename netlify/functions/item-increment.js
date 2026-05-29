@@ -1,4 +1,5 @@
 import { query } from './db.js';
+import { getItemId } from './route-utils.js';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -16,7 +17,7 @@ export async function handler(event, context) {
     return { statusCode: 405, headers, body: JSON.stringify({ error: `Method ${event.httpMethod} not allowed` }) };
   }
 
-  const id = event.queryStringParameters ? event.queryStringParameters.id : null;
+  const id = getItemId(event);
 
   if (!id) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Item ID is required' }) };

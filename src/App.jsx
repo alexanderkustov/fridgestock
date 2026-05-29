@@ -60,7 +60,7 @@ export default function App() {
   // Atomic Increment
   const handleIncrement = async (id) => {
     try {
-      const res = await fetch(`/api/items/${id}/increment`, { method: 'POST' });
+      const res = await fetch(`/api/items/${encodeURIComponent(id)}/increment`, { method: 'POST' });
       if (!res.ok) throw new Error('Could not update quantity');
       const updatedItem = await res.json();
       
@@ -79,7 +79,7 @@ export default function App() {
   // Atomic Decrement
   const handleDecrement = async (id) => {
     try {
-      const res = await fetch(`/api/items/${id}/decrement`, { method: 'POST' });
+      const res = await fetch(`/api/items/${encodeURIComponent(id)}/decrement`, { method: 'POST' });
       if (!res.ok) throw new Error('Could not update quantity');
       const updatedItem = await res.json();
       
@@ -95,7 +95,7 @@ export default function App() {
   // Delete Item
   const handleDelete = async (id, title) => {
     try {
-      const res = await fetch(`/api/items/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/items/${encodeURIComponent(id)}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Could not delete item');
       
       showToast(`Removed ${title} from inventory`);
@@ -109,7 +109,7 @@ export default function App() {
   // Restock Item (Mark as Bought)
   const handleRestockItem = async (id, title) => {
     try {
-      const res = await fetch(`/api/items/${id}`, {
+      const res = await fetch(`/api/items/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'restock' })

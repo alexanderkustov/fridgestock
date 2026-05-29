@@ -9,19 +9,19 @@
 # Routes and Redirects mapping clean API endpoints to Netlify functions
 [[redirects]]
   from = "/api/items/:id/increment"
-  to = "/.netlify/functions/item-increment?id=:id"
+  to = "/.netlify/functions/item-increment/:id"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/items/:id/decrement"
-  to = "/.netlify/functions/item-decrement?id=:id"
+  to = "/.netlify/functions/item-decrement/:id"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/items/:id"
-  to = "/.netlify/functions/items?id=:id"
+  to = "/.netlify/functions/items/:id"
   status = 200
   force = true
 

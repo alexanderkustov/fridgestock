@@ -108,6 +108,11 @@ export async function query(text, params) {
       return { rows: groceryItems };
     }
 
+    // Specific SELECT by ID
+    if (lowerText.includes('where id =')) {
+      return { rows: items.filter(item => item.id === params[0]) };
+    }
+
     // Standard SELECT all items (ordered by created_at DESC)
     const sorted = [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     return { rows: sorted };
