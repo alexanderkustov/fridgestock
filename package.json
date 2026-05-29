@@ -17,8 +17,8 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
-    "netlify-cli": "^17.10.1",
+    "netlify-cli": "^26.0.2",
     "pg": "^8.11.3",
-    "vite": "^5.1.4"
+    "vite": "^8.0.14"
   }
 }
